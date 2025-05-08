@@ -10,10 +10,10 @@
         <relativePath/>
     </parent>
     
-    <groupId>com.example</groupId>
-    <artifactId>product-api</artifactId>
+    <groupId>com.product</groupId>
+    <artifactId>product</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>product-api</name>
+    <name>product</name>
     <description>Product Management API</description>
     
     <properties>
@@ -53,7 +53,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.example.productapi.ProductApiApplication</mainClass>
+                    <mainClass>com.product.ProductApplication</mainClass>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>

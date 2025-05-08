@@ -1,4 +1,4 @@
-package com.example.productapi.model;
+package com.product.model;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -16,8 +16,16 @@ public class Product {
     private String name;
     
     private String description;
+
     private String image;
+
     private String category;
+
+    private Integer shellId;
+
+    private String internalReference;
+    
+    private Integer rating;
 
     @NotNull(message = "The price should be provided")
     @Positive(message = "The price should be positive")
@@ -27,11 +35,7 @@ public class Product {
     @Positive(message = "The quantity should be positive")
     private Integer quantity;
     
-    private String internalReference;
-    private Integer shellId;
-    
     private InventoryStatus inventoryStatus;
-    private Integer rating;
     private Long createdAt;
     private Long updatedAt;
     
