@@ -1,0 +1,15 @@
+# Backend (Spring Boot)
+back/HELP.md
+back/target/
+
+### VS Code ###
+.vscode/
+*.code-workspace
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# IDEs and editors
+.project
+.classpath
