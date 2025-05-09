@@ -88,4 +88,19 @@
   "inventoryStatus" : "INSTOCK",
   "createdAt" : 1746802084276,
   "updatedAt" : 1746802084276
+}, {
+  "id" : 7,
+  "code" : "test004",
+  "name" : "Test Product4",
+  "description" : "A product for testing POST",
+  "image" : null,
+  "category" : null,
+  "shellId" : null,
+  "internalReference" : null,
+  "rating" : null,
+  "price" : 9.99,
+  "quantity" : 100,
+  "inventoryStatus" : "INSTOCK",
+  "createdAt" : 1746803651413,
+  "updatedAt" : 1746803651413
 } ]
