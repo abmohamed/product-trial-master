@@ -31,37 +31,32 @@ public class AuthController {
 
     @PostMapping("/api/account")
     public ResponseEntity<User> createAccount(@RequestBody User user) {
-        // Encode password before saving
+        // The password should be encoded before saving
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User savedUser = userRepository.save(user);
-        // Clear the password before returning
+        // The password should be cleared before returning
         savedUser.setPassword(null);
         return ResponseEntity.ok(savedUser);
     }
 
     @PostMapping("/api/token")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
-        logger.info("Login attempt for email: {}", loginRequest.getEmail());
+        logger.info("Login trying for user with the email: {}", loginRequest.getEmail());
         
         Optional<User> userOpt = userRepository.findByEmail(loginRequest.getEmail());
         if (userOpt.isEmpty()) {
-            logger.warn("User not found with email: {}", loginRequest.getEmail());
+            logger.warn("The user was not found with the email: {}", loginRequest.getEmail());
             return ResponseEntity.status(401).build();
         }
         
         User user = userOpt.get();
-        logger.debug("Stored password hash: {}", user.getPassword());
-        logger.debug("Comparing with password: {}", loginRequest.getPassword());
         boolean matches = passwordEncoder.matches(loginRequest.getPassword(), user.getPassword());
-        logger.debug("Password match result: {}", matches);
         
         if (!matches) {
-            logger.warn("Invalid password for user: {}", loginRequest.getEmail());
             return ResponseEntity.status(401).build();
         }
         
         String token = jwtTokenUtil.createToken(user.getEmail());
-        logger.info("Login successful for user: {}", loginRequest.getEmail());
         return ResponseEntity.ok(new AuthResponse(token));
     }
 }

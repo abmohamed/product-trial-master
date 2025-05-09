@@ -2,11 +2,10 @@ package com.product.controller;
 
 import com.product.model.Product;
 import com.product.service.ProductService;
-import com.product.security.AdminOnly;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,14 +31,14 @@ public class ProductController {
     }
 
     @PostMapping
-    @AdminOnly
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product) {
         Product createdProduct = productService.createProduct(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
 
     @PatchMapping("/{id}")
-    @AdminOnly
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Product> updateProduct(
             @PathVariable Long id,
             @Valid @RequestBody Product product) {
@@ -47,7 +46,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    @AdminOnly
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
