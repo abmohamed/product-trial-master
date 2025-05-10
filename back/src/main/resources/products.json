@@ -103,4 +103,19 @@
   "inventoryStatus" : "INSTOCK",
   "createdAt" : 1746803651413,
   "updatedAt" : 1746803651413
+}, {
+  "id" : 8,
+  "code" : "code-4",
+  "name" : "name-4",
+  "description" : "description-4",
+  "image" : "image-4.jpg",
+  "category" : "Electronics",
+  "shellId" : 4,
+  "internalReference" : "REF-4",
+  "rating" : 4,
+  "price" : 4.0,
+  "quantity" : 4,
+  "inventoryStatus" : "INSTOCK",
+  "createdAt" : 1746885328505,
+  "updatedAt" : 1746885328505
 } ]

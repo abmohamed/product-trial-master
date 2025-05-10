@@ -1,109 +1,198 @@
-# Consignes
+# Product Management API
 
-- Vous êtes développeur front-end : vous devez réaliser les consignes décrites dans le chapitre [Front-end](#Front-end)
+A Spring Boot REST API for product management with user authentication, shopping cart, and wishlist functionality.
 
-- Vous êtes développeur back-end : vous devez réaliser les consignes décrites dans le chapitre [Back-end](#Back-end) (*)
+## Features
 
-- Vous êtes développeur full-stack : vous devez réaliser les consignes décrites dans le chapitre [Front-end](#Front-end) et le chapitre [Back-end](#Back-end) (*)
+- User authentication using JWT tokens
+- Product management (CRUD operations)
+- Shopping cart management
+- Wishlist management
+- Role-based access control (admin vs normal users)
 
-(*) Afin de tester votre API, veuillez proposer une stratégie de test appropriée.
+## Technical Stack
 
-## Front-end
+- Java 21
+- Spring Boot 3.2.1
+- Spring Security with JWT
+- JSON file-based storage
+- Maven for dependency management
 
-Le site de e-commerce d'Alten a besoin de s'enrichir de nouvelles fonctionnalités.
+## API Endpoints
 
-### Partie 1 : Shop
+### Authentication
 
-- Afficher toutes les informations pertinentes d'un produit sur la liste
-- Permettre d'ajouter un produit au panier depuis la liste 
-- Permettre de supprimer un produit du panier
-- Afficher un badge indiquant la quantité de produits dans le panier
-- Permettre de visualiser la liste des produits qui composent le panier.
-
-### Partie 2
-
-- Créer un nouveau point de menu dans la barre latérale ("Contact")
-- Créer une page "Contact" affichant un formulaire
-- Le formulaire doit permettre de saisir son email, un message et de cliquer sur "Envoyer"
-- Email et message doivent être obligatoirement remplis, message doit être inférieur à 300 caractères.
-- Quand le message a été envoyé, afficher un message à l'utilisateur : "Demande de contact envoyée avec succès".
-
-### Bonus : 
-
-- Ajouter un système de pagination et/ou de filtrage sur la liste des produits
-- On doit pouvoir visualiser et ajuster la quantité des produits depuis la liste et depuis le panier 
-
-## Back-end
-
-### Partie 1
-
-Développer un back-end permettant la gestion de produits définis plus bas.
-Vous pouvez utiliser la technologie de votre choix parmi la liste suivante :
-
-- Node.js/Express
-- Java/Spring Boot
-- C#/.net Core
-- PHP/Symphony : Utilisation d'API Platform interdite
-
-
-Le back-end doit gérer les API suivantes : 
-
-| Resource           | POST                  | GET                            | PATCH                                    | PUT | DELETE           |
-| ------------------ | --------------------- | ------------------------------ | ---------------------------------------- | --- | ---------------- |
-| **/products**      | Create a new product  | Retrieve all products          | X                                        | X   |     X            |
-| **/products/:id**  | X                     | Retrieve details for product 1 | Update details of product 1 if it exists | X   | Remove product 1 |
-
-Un produit a les caractéristiques suivantes : 
-
-``` typescript
-class Product {
-  id: number;
-  code: string;
-  name: string;
-  description: string;
-  image: string;
-  category: string;
-  price: number;
-  quantity: number;
-  internalReference: string;
-  shellId: number;
-  inventoryStatus: "INSTOCK" | "LOWSTOCK" | "OUTOFSTOCK";
-  rating: number;
-  createdAt: number;
-  updatedAt: number;
+1. Create Account:
+```bash
+POST /api/account
+{
+    "username": "username",
+    "firstname": "firstname",
+    "email": "user@example.com",
+    "password": "password123"
 }
 ```
 
-Le back-end créé doit pouvoir gérer les produits dans une base de données SQL/NoSQL ou dans un fichier json.
+2. Get Token:
+```bash
+POST /api/token
+{
+    "email": "user@example.com",
+    "password": "password123"
+}
+```
 
-### Partie 2
+### Products
 
-- Imposer à l'utilisateur de se connecter pour accéder à l'API.
-  La connexion doit être gérée en utilisant un token JWT.  
-  Deux routes devront être créées :
-  * [POST] /account -> Permet de créer un nouveau compte pour un utilisateur avec les informations fournies par la requête.   
-    Payload attendu : 
-    ```
-    {
-      username: string,
-      firstname: string,
-      email: string,
-      password: string
-    }
-    ```
-  * [POST] /token -> Permet de se connecter à l'application.  
-    Payload attendu :  
-    ```
-    {
-      email: string,
-      password: string
-    }
-    ```
-    Une vérification devra être effectuée parmi tout les utilisateurs de l'application afin de connecter celui qui correspond aux infos fournies. Un token JWT sera renvoyé en retour de la reqûete.
-- Faire en sorte que seul l'utilisateur ayant le mail "admin@admin.com" puisse ajouter, modifier ou supprimer des produits. Une solution simple et générique devra être utilisée. Il n'est pas nécessaire de mettre en place une gestion des accès basée sur les rôles.
-- Ajouter la possibilité pour un utilisateur de gérer un panier d'achat pouvant contenir des produits.
-- Ajouter la possibilité pour un utilisateur de gérer une liste d'envie pouvant contenir des produits.
+All product endpoints require authentication token in header: `Authorization: Bearer YOUR_TOKEN`
 
-## Bonus
+1. Get all products:
+```bash
+GET /api/products
+```
 
-Vous pouvez ajouter des tests Postman ou Swagger pour valider votre API
+2. Get product by ID:
+```bash
+GET /api/products/{id}
+```
+
+3. Create product (admin only):
+```bash
+POST /api/products
+{
+    "code": "code-1",
+    "name": "Product Name",
+    "description": "Product Description",
+    "image": "image.jpg",
+    "category": "Electronics",
+    "price": 99.99,
+    "quantity": 100,
+    "internalReference": "REF-1",
+    "shellId": 1,
+    "inventoryStatus": "INSTOCK",
+    "rating": 4
+}
+```
+
+4. Update product (admin only):
+```bash
+PATCH /api/products/{id}
+{
+    "name": "Updated Name",
+    "price": 149.99
+}
+```
+
+5. Delete product (admin only):
+```bash
+DELETE /api/products/{id}
+```
+
+### Shopping Cart
+
+All cart endpoints require authentication token.
+
+1. View cart:
+```bash
+GET /api/cart
+```
+
+2. Add to cart:
+```bash
+POST /api/cart/items?productId={productId}&quantity={quantity}
+```
+
+3. Update quantity:
+```bash
+PATCH /api/cart/items/{itemId}?quantity={newQuantity}
+```
+
+4. Remove from cart:
+```bash
+DELETE /api/cart/items/{itemId}
+```
+
+5. Clear cart:
+```bash
+DELETE /api/cart
+```
+
+### Wishlist
+
+All wishlist endpoints require authentication token.
+
+1. View wishlist:
+```bash
+GET /api/wishlist
+```
+
+2. Add to wishlist:
+```bash
+POST /api/wishlist/items?productId={productId}
+```
+
+3. Remove from wishlist:
+```bash
+DELETE /api/wishlist/items/{itemId}
+```
+
+## Authentication
+
+The API uses JWT tokens for authentication. To access protected endpoints:
+
+1. First create an account or use the default admin account:
+   - Email: admin@admin.com
+   - Password: admin123
+
+2. Get a JWT token using the /api/token endpoint
+
+3. Include the token in all subsequent requests:
+   ```
+   Authorization: Bearer YOUR_TOKEN
+   ```
+
+## Authorization
+
+- Normal users can:
+  - View products
+  - Manage their cart
+  - Manage their wishlist
+
+- Admin users (admin@admin.com) can also:
+  - Create products
+  - Update products
+  - Delete products
+
+## Getting Started
+
+1. Clone the repository
+2. Navigate to the project directory
+3. Build the project:
+   ```bash
+   ./mvnw clean package
+   ```
+4. Run the application:
+   ```bash
+   java -jar target/product-0.0.1-SNAPSHOT.jar
+   ```
+5. The API will be available at `http://localhost:8080`
+
+## Data Storage
+
+The application uses JSON files for data persistence:
+- products.json: Store product data
+- users.json: Store user accounts
+- cart.json: Store shopping cart items
+- wishlist.json: Store wishlist items
+
+## Error Handling
+
+The API returns appropriate HTTP status codes:
+- 200: Successful operation
+- 201: Resource created
+- 204: No content (successful deletion)
+- 400: Bad request
+- 401: Unauthorized
+- 403: Forbidden
+- 404: Resource not found
+- 500: Internal server error
